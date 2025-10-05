@@ -19,7 +19,7 @@ public class ControllerSystem : MonoBehaviour
             if (Vector3.Distance(controller.independent.transform.position, GameObject.FindGameObjectWithTag("Player").transform.position) < 3)
             {
                 //Debug.Log("Press F to interact with the lever");
-                //¿ÉÒÔ¼ÓÉÏÎÄ×ÖÌáÊ¾£¬±ÈÈç¡°°´FÓëÀ­¸Ë½»»¥¡±
+                //ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ç¡°ï¿½ï¿½Fï¿½ï¿½ï¿½ï¿½ï¿½Ë½ï¿½ï¿½ï¿½ï¿½ï¿½
                 if (Input.GetKeyDown(KeyCode.F))
                 {
                     controller.independent.Active = !controller.independent.Active;

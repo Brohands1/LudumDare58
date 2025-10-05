@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Dependent : MonoBehaviour//»ú¹Ø
+public class Dependent : MonoBehaviour//ï¿½ï¿½ï¿½ï¿½
 {
     void Start()
     {
