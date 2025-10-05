@@ -14,8 +14,13 @@ public class ShadowUtil : MonoBehaviour
     public Tilemap tilemap;
     public TileBase tile;
     public float maxRemoveDistance = 5f;
+    public static float addShadowTimer = 4f;
+    public float currentAddShadowTimer = 0f;
+    public Transform PlatformPlace;
+    public GameObject ShadowPlatform;
     void Update()
     {
+        Debug.Log(Data.currentShadows);
         if (Data.currentShadows > 1)
         {
             if (Input.GetKeyDown(placeBlockKey) && Data.enablePlacingBlocks)
@@ -26,9 +31,20 @@ public class ShadowUtil : MonoBehaviour
             {
                 createController();
             }
-
+            
         }
-        if(Input.GetKeyDown(KeyCode.Alpha1))
+        if (Data.currentShadows < Data.maxShadows)
+        {
+            currentAddShadowTimer += Time.deltaTime;
+            Debug.Log(currentAddShadowTimer);
+            if (currentAddShadowTimer >= addShadowTimer)
+            {
+                Data.currentShadows++;
+                currentAddShadowTimer = 0f;
+                Debug.Log($"Regain a shadow, current shadows: {Data.currentShadows}");
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             foreach(var shadow in Data.shadows)
             {
@@ -50,14 +66,9 @@ public class ShadowUtil : MonoBehaviour
     {
         Vector3 temp = transform.position;
         Vector3Int cellPosition = tilemap.WorldToCell(temp);
-        cellPosition.y--;
         if (!tilemap.HasTile(cellPosition))
         {
-            //·ÅÖÃ·½¿éÂß¼­
-            tilemap.SetTile(cellPosition, tile);
-            Data.shadows.Add(new Data.shadow(cellPosition, Data.shadow.Type.block,tilemap));
-            Debug.Log($"Create block shadow{cellPosition}");
-            Data.currentShadows--;
+            Instantiate(ShadowPlatform, PlatformPlace.position, Quaternion.identity);
         }
     }
     void createController()

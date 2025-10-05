@@ -6,10 +6,9 @@ public class ShadowOnMap : MonoBehaviour
 {
     void Update()
     {
-        if(Vector3.Distance(transform.position,GameObject.FindGameObjectWithTag("Player").transform.position) < 1f)
+        if(Vector3.Distance(transform.position,GameObject.FindGameObjectWithTag("Player").transform.position) < 0.5f)
         {
-            Data.currentShadows++;
-            Data.maxShadows++;
+            Data.AddPiece();
             Destroy(gameObject);
         }
     }

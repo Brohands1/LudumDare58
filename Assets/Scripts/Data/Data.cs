@@ -44,7 +44,19 @@ public class Data
     public static KeyCode[] keys = { KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6, KeyCode.Alpha7, KeyCode.Alpha8, KeyCode.Alpha9 };
     public static bool[] occupied = new bool[9];
     public static int maxShadows = 1;
+    public static int maxPieces = 4;
     public static int currentShadows = 1;
+    public static int currentPieces = 3;
+    public static void AddPiece()
+    {
+        currentPieces++;
+        if(currentPieces == maxPieces)
+        {
+            maxShadows++;
+            currentShadows++;
+            currentPieces = 0;
+        }
+    }
     public static bool
         enablePlacingBlocks = true,
         enableSummonController = true,
