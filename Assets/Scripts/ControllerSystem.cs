@@ -34,6 +34,7 @@ public class ControllerSystem : MonoBehaviour
                     {
                         if (Data.occupied[i] == false)
                         {
+                            Data.occupied[i] = true;
                             Data.shadows.Add(new Data.ShadowedController(controller,i));
                             break;
                         }

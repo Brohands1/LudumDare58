@@ -20,7 +20,7 @@ public class ShadowUtil : MonoBehaviour
     public GameObject ShadowPlatform;
     void Update()
     {
-        Debug.Log(Data.currentShadows);
+        //Debug.Log(Data.currentShadows);
         if (Data.currentShadows > 1)
         {
             if (Input.GetKeyDown(placeBlockKey) && Data.enablePlacingBlocks)
@@ -36,7 +36,7 @@ public class ShadowUtil : MonoBehaviour
         if (Data.currentShadows < Data.maxShadows)
         {
             currentAddShadowTimer += Time.deltaTime;
-            Debug.Log(currentAddShadowTimer);
+            //Debug.Log(currentAddShadowTimer);
             if (currentAddShadowTimer >= addShadowTimer)
             {
                 Data.currentShadows++;
@@ -83,8 +83,7 @@ public class ShadowUtil : MonoBehaviour
     }
     void createBlock()
     {
-        Vector3 temp = transform.position;
-        Vector3Int cellPosition = tilemap.WorldToCell(temp);
+        Vector3Int cellPosition = tilemap.WorldToCell(PlatformPlace.position);
         if (!tilemap.HasTile(cellPosition)&&Data.currentShadows>1)
         {
             Data.currentShadows--;
