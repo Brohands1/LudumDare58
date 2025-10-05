@@ -27,10 +27,10 @@ public class ShadowUtil : MonoBehaviour
             {
                 createBlock();
             }
-            if (Input.GetKeyDown(summonControllerKey) && Data.enableSummonController)
-            {
-                createController();
-            }
+            //if (Input.GetKeyDown(summonControllerKey) && Data.enableSummonController)
+            //{
+            //    createController();
+            //}
             
         }
         if (Data.currentShadows < Data.maxShadows)
@@ -44,62 +44,51 @@ public class ShadowUtil : MonoBehaviour
                 Debug.Log($"Regain a shadow, current shadows: {Data.currentShadows}");
             }
         }
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+
+        // handle numeric keys 1-9: toggle corresponding shadow with matching key
+        for (int i = 1; i <= 9; i++)
         {
-            foreach(var shadow in Data.shadows)
+            KeyCode pressedKey = (KeyCode)((int)KeyCode.Alpha0 + i);
+            if (Input.GetKeyDown(pressedKey))
             {
-                if(shadow.type==Data.shadow.Type.controller&&shadow.controller.key==KeyCode.Alpha1)
+                foreach (var shadow in Data.shadows)
                 {
-                    shadow.controller.controller.independent.Active = !shadow.controller.controller.independent.Active;
-                    shadow.controller.controller.dependent.changeTo(shadow.controller.controller.independent.Active);
-                    break;
+                    if (shadow == null) continue;
+                    if (shadow.key == pressedKey)
+                    {
+                        // safety checks before toggling
+                        if (shadow.controller != null && shadow.controller.independent != null && shadow.controller.dependent != null)
+                        {
+                            if (Data.currentShadows > 1)
+                            {
+                                Data.currentShadows--;
+                                shadow.controller.independent.Active = !shadow.controller.independent.Active;
+                                foreach (var dep in shadow.controller.dependent)
+                                {
+                                    dep.changeTo(shadow.controller.independent.Active);
+                                }
+                            } 
+                        }
+                        break;
+                    }
                 }
             }
         }
-        if (Input.GetKeyDown(removeBlockKey))
-        {
-            RemoveShadow();
-        }
+
+        //if (Input.GetKeyDown(removeBlockKey))
+        //{
+        //    RemoveShadow();
+        //}
         
     }
     void createBlock()
     {
         Vector3 temp = transform.position;
         Vector3Int cellPosition = tilemap.WorldToCell(temp);
-        if (!tilemap.HasTile(cellPosition))
+        if (!tilemap.HasTile(cellPosition)&&Data.currentShadows>1)
         {
+            Data.currentShadows--;
             Instantiate(ShadowPlatform, PlatformPlace.position, Quaternion.identity);
-        }
-    }
-    void createController()
-    {
-        
-    }
-    void RemoveShadow()
-    {
-        Data.shadow nearest = Data.NearestShadow(transform.position, tilemap);
-        if (nearest != null&& Vector3.Distance(transform.position, nearest.worldPlace)<maxRemoveDistance)
-        {
-            switch(nearest.type)
-            {
-                case Data.shadow.Type.controller:
-                {
-                    Data.occupied[nearest.controller.num] = false;
-                    nearest.controller.controller.independent.Shadowed=false;
-                    Debug.Log("Remove controller shadow");
-                    break;
-                }
-                case Data.shadow.Type.soldier:
-                    return;
-                case Data.shadow.Type.block:
-                {
-                    tilemap.SetTile(nearest.place, null);
-                    break;
-                }
-            }
-            Data.shadows.Remove(nearest);
-            Debug.Log(Data.shadows.Count);
-            Data.currentShadows++;
         }
     }
 }
