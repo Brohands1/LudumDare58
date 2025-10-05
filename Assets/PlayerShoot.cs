@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerShoot : MonoBehaviour
 {
     public GameObject bulletPrefab;   // assign in Inspector
-    public float bulletSpeed = 500000f;   // make it faster
+    public float bulletSpeed = 50f;   // make it faster
     public Transform firePoint;       // optional, for gun tip (assign if you have one)
 
     void Update()
@@ -36,7 +36,8 @@ public class PlayerShoot : MonoBehaviour
         // Get rigidbody and apply velocity
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
        
-        rb.velocity = direction * bulletSpeed;
+        //rb.velocity = direction * 20f; // สิสิ20
+        rb.AddForce(direction * 2000f); // สิสิ500
         Debug.Log(rb.velocity);
     }
 }
