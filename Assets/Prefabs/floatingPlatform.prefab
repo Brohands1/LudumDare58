@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7148036724670070923}
   - component: {fileID: 1680403371744285388}
   - component: {fileID: 2097085571633590842}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: floatingPlatform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -175,7 +175,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   placeIn: {fileID: 8932595300707346538}
   goingToEnd: 0
-  speed: 10
+  speed: 100
 --- !u!1 &7252656308158261932
 GameObject:
   m_ObjectHideFlags: 0
