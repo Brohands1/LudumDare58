@@ -48,6 +48,7 @@ public class Data
         occupied = new bool[9];
         currentShadows = maxShadows;
         UIRefreshNeeded = true;
+        GameObject.FindGameObjectWithTag("Player").transform.position = SavePoints.currentSavePoint.transform.position;
         //shadows.RemoveAt(1);
     }
     public static void ResetControllers()
