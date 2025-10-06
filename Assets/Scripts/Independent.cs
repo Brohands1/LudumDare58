@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class Independent : MonoBehaviour//À­¸Ë
 {
-    public SpriteRenderer sr;
+    public Animator animator;
     public bool Active = false;
     public bool Shadowed=false;
     private void Update()
     {
         if (Active)
         {
-            sr.color = new Color(1, 1, 1, 1);
+            animator.SetBool("S", true);
         }
         else
         {
-            sr.color = new Color(1, 1, 1, 0.5f);
+            animator.SetBool("S", false);
         }
     }
 }

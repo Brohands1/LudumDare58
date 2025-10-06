@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class UISys : MonoBehaviour
 {
-
-    // Update is called once per frame
     void Update()
     {
         if(Data.UIRefreshNeeded)
@@ -15,6 +13,7 @@ public class UISys : MonoBehaviour
     }
     IEnumerator nextF()
     {
+        yield return null;
         yield return null;
         Data.UIRefreshNeeded = false;
     }

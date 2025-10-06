@@ -175,7 +175,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   placeIn: {fileID: 8932595300707346538}
   goingToEnd: 0
-  speed: 100
+  speed: 15
 --- !u!1 &7252656308158261932
 GameObject:
   m_ObjectHideFlags: 0
