@@ -27,5 +27,23 @@ public class floatingPlatform : Dependent
         {
             transform.position= Vector3.MoveTowards(transform.position, endPlace,speed* Time.deltaTime);
         }else transform.position= Vector3.MoveTowards(transform.position, startPlace,speed* Time.deltaTime);
+
+        
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            collision.transform.parent = this.transform;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            collision.transform.parent = null;
+        }
     }
 }

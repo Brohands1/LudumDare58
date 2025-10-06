@@ -11,14 +11,22 @@ public class Movement : MonoBehaviour
     public Rigidbody2D rb;
     private AnimationScript anim;
 
+    [Space]
     [Header("Stats")]
     public float speed = 10;
     public float jumpForce = 50;
     public float slideSpeed = 5;
     public float wallJumpLerp = 10;
     public float dashSpeed = 20;
+
+    [Space]
+    [Header("Gravity & Slide")]
+    [Tooltip("Baseline gravity when not grabbing walls or dashing")]
+    public float baseGravity = 3f;
+    [Tooltip("Minimum downward speed while touching a wall and sliding")]
     public float minWallSlideSpeed = 2f;
 
+    [Space]
     [Header("Booleans")]
     public bool canMove;
     public bool wallGrab;
@@ -26,21 +34,30 @@ public class Movement : MonoBehaviour
     public bool wallSlide;
     public bool isDashing;
 
-    private bool groundTouch;
-    private bool hasDashed;
+    [Space]
+    [Header("Moving Platform Follow (Layer-based)")]
+    [Tooltip("勾选 Ground 等作为可跟随的平台层")]
+    public LayerMask movingPlatformLayer;   // 在 Inspector 勾选 Ground
+    private Transform currentPlatform;
+    private Vector3 lastPlatformPos;
+    private bool onMovingPlatform;
+    private static bool InLayer(GameObject go, LayerMask mask)
+        => (mask.value & (1 << go.layer)) != 0;
 
-    public int side = 1;
-
+    [Space]
     [Header("Polish")]
     public ParticleSystem dashParticle;
     public ParticleSystem jumpParticle;
     public ParticleSystem wallJumpParticle;
     public ParticleSystem slideParticle;
 
-    [Header("Gravity")]
-    public float baseGravity = 3f;
+    public float fallLength = 5f;
 
-    // Start is called before the first frame update
+    private bool groundTouch;
+    private bool hasDashed;
+
+    public int side = 1;
+
     void Start()
     {
         coll = GetComponent<Collision>();
@@ -60,16 +77,14 @@ public class Movement : MonoBehaviour
         Walk(dir);
         anim.SetHorizontalMovement(x, y, rb.velocity.y);
 
+        // Wall Grab toggle
         if (coll.onWall && Input.GetButton("Fire3") && canMove)
         {
             if (side != coll.wallSide)
                 anim.Flip(side * -1);
-
             wallGrab = true;
-            // Hold grab + stick neutral/down => slide; stick up => climb
-            wallSlide = (y <= 0f);
+            wallSlide = false;
         }
-
 
         if (Input.GetButtonUp("Fire3") || !coll.onWall || !canMove)
         {
@@ -77,12 +92,7 @@ public class Movement : MonoBehaviour
             wallSlide = false;
         }
 
-        if (coll.onGround && !isDashing)
-        {
-            wallJumped = false;
-            GetComponent<BetterJumping>().enabled = true;
-        }
-
+        // Gravity handling for grab / normal
         if (wallGrab && !isDashing)
         {
             if (y > 0.05f)
@@ -98,31 +108,35 @@ public class Movement : MonoBehaviour
             else
             {
                 // slide (neutral or holding down while grabbing)
-                rb.gravityScale = 3;
+                rb.gravityScale = baseGravity;
                 WallSlide();
             }
         }
         else
         {
-            rb.gravityScale = 3;
+            rb.gravityScale = baseGravity;
         }
 
-        if (!wallGrab)
-            rb.gravityScale = baseGravity;
-
+        // Only slide when grabbing + stick neutral/down
         if (coll.onWall && !coll.onGround)
         {
             if (wallGrab && y <= 0f)
             {
                 wallSlide = true;
+                WallSlide();
             }
         }
 
         if (!coll.onWall || coll.onGround)
             wallSlide = false;
 
+        // Jump
         if (Input.GetButtonDown("Jump"))
         {
+            // 起跳时解除平台跟随（防止被平台继续“拖走”）
+            onMovingPlatform = false;
+            currentPlatform = null;
+
             anim.SetTrigger("jump");
 
             if (coll.onGround)
@@ -131,61 +145,106 @@ public class Movement : MonoBehaviour
                 WallJump();
         }
 
+        // Dash
         if (Input.GetButtonDown("Fire1") && !hasDashed)
         {
-            if(xRaw != 0 || yRaw != 0)
+            if (xRaw != 0 || yRaw != 0)
                 Dash(xRaw, yRaw);
         }
 
         if (coll.onGround && !groundTouch)
         {
             GroundTouch();
-            groundTouch = true;
         }
 
-        if(!coll.onGround && groundTouch)
+        if (!coll.onGround && !coll.onWall)
         {
             groundTouch = false;
         }
 
-        WallParticle(y);
-
-        if (wallGrab || wallSlide || !canMove)
-            return;
-
-        if(x > 0)
-        {
+        // Sidedness
+        if (x > 0)
             side = 1;
-            anim.Flip(side);
-        }
         if (x < 0)
-        {
             side = -1;
-            anim.Flip(side);
-        }
 
-
+        // Particle while sliding
+        if (wallSlide)
+            SlideParticle(dir);
     }
 
-    void GroundTouch()
+    void FixedUpdate()
     {
+        // 跟随平台的位移（基于 Layer）
+        if (onMovingPlatform && currentPlatform != null)
+        {
+            const float platformMoveEps = 0.0001f;
+            Vector3 delta = currentPlatform.position - lastPlatformPos;
+            if (delta.sqrMagnitude > platformMoveEps)
+            {
+                rb.MovePosition(rb.position + (Vector2)delta);
+            }
+            lastPlatformPos = currentPlatform.position;
+        }
+    }
+
+    void OnCollisionStay2D(Collision2D c)
+    {
+        // ① 必须在指定 Layer（如 Ground）
+        if (!InLayer(c.collider.gameObject, movingPlatformLayer)) return;
+
+        // ② 推荐只跟随 Kinematic 平台，避免把静止地面当“移动平台”
+        var platRb = c.rigidbody;
+        if (platRb != null && platRb.bodyType != RigidbodyType2D.Kinematic)
+        {
+            // 如果你想也跟随 Dynamic 地面，移除此 return
+            return;
+        }
+
+        // ③ 仅当从上方踩住（法线向上）
+        foreach (var contact in c.contacts)
+        {
+            if (contact.normal.y > 0.6f)
+            {
+                if (currentPlatform != c.collider.transform)
+                {
+                    currentPlatform = c.collider.transform;
+                    lastPlatformPos = currentPlatform.position;
+                }
+                onMovingPlatform = true;
+                return;
+            }
+        }
+    }
+
+    void OnCollisionExit2D(Collision2D c)
+    {
+        if (currentPlatform && c.collider.transform == currentPlatform)
+        {
+            currentPlatform = null;
+            onMovingPlatform = false;
+        }
+    }
+
+    private void GroundTouch()
+    {
+        groundTouch = true;
         hasDashed = false;
         isDashing = false;
+        wallJumped = false;
+        GetComponent<BetterJumping>().enabled = true;
 
-        side = anim.sr.flipX ? -1 : 1;
-
+        // particles
         jumpParticle.Play();
     }
 
     private void Dash(float x, float y)
     {
-        Camera.main.transform.DOComplete();
-        Camera.main.transform.DOShakePosition(.2f, .5f, 14, 90, false, true);
-        FindObjectOfType<RippleEffect>().Emit(Camera.main.WorldToViewportPoint(transform.position));
+        if (!canMove) return;
 
         hasDashed = true;
-
         anim.SetTrigger("dash");
+        dashParticle.Play();
 
         rb.velocity = Vector2.zero;
         Vector2 dir = new Vector2(x, y);
@@ -196,20 +255,14 @@ public class Movement : MonoBehaviour
 
     IEnumerator DashWait()
     {
-        FindObjectOfType<GhostTrail>().ShowGhost();
-        StartCoroutine(GroundDash());
-        DOVirtual.Float(14, 0, .8f, RigidbodyDrag);
-
-        dashParticle.Play();
-        rb.gravityScale = 0;
-        GetComponent<BetterJumping>().enabled = false;
-        wallJumped = true;
         isDashing = true;
+        GetComponent<BetterJumping>().enabled = false;
+        rb.gravityScale = 0;
 
         yield return new WaitForSeconds(.3f);
 
         dashParticle.Stop();
-        rb.gravityScale = 3;
+        rb.gravityScale = baseGravity;
         GetComponent<BetterJumping>().enabled = true;
         wallJumped = false;
         isDashing = false;
@@ -237,28 +290,52 @@ public class Movement : MonoBehaviour
 
         Jump((Vector2.up / 1.5f + wallDir / 1.5f), true);
 
-        wallJumped = true;
+        wallJumpParticle.Play();
     }
 
-    private void WallSlide()
+    private void Jump(Vector2 dir, bool wall)
     {
-        if(coll.wallSide != side)
-         anim.Flip(side * -1);
+        slideParticle.Stop();
+        if (coll.onGround)
+            rb.velocity = new Vector2(rb.velocity.x, 0);
+
+        if (wall)
+        {
+            rb.velocity = new Vector2(0, 0);
+            rb.velocity += dir * jumpForce * 1.15f;
+        }
+        else
+        {
+            rb.velocity += dir * jumpForce;
+        }
+    }
+
+    IEnumerator DisableMovement(float time)
+    {
+        canMove = false;
+        yield return new WaitForSeconds(time);
+        canMove = true;
+    }
+
+    void WallSlide()
+    {
+        if (coll.wallSide != side)
+            anim.Flip(side * -1);
 
         if (!canMove)
             return;
 
         bool pushingWall = false;
-        if((rb.velocity.x > 0 && coll.onRightWall) || (rb.velocity.x < 0 && coll.onLeftWall))
+        if ((rb.velocity.x > 0 && coll.onRightWall) || (rb.velocity.x < 0 && coll.onLeftWall))
         {
             pushingWall = true;
         }
+
         float push = pushingWall ? 0 : rb.velocity.x;
 
-        // Never go slower than -minSlide, but allow gravity to go faster
+        // Clamp Y to ensure we always go down at least min slide speed, but allow gravity to go faster
         float minSlide = Mathf.Max(minWallSlideSpeed, slideSpeed);
         float yVel = Mathf.Min(rb.velocity.y, -minSlide);
-
         rb.velocity = new Vector2(push, yVel);
     }
 
@@ -280,36 +357,13 @@ public class Movement : MonoBehaviour
         }
     }
 
-    private void Jump(Vector2 dir, bool wall)
-    {
-        slideParticle.transform.parent.localScale = new Vector3(ParticleSide(), 1, 1);
-        ParticleSystem particle = wall ? wallJumpParticle : jumpParticle;
-
-        rb.velocity = new Vector2(rb.velocity.x, 0);
-        rb.velocity += dir * jumpForce;
-
-        particle.Play();
-    }
-
-    IEnumerator DisableMovement(float time)
-    {
-        canMove = false;
-        yield return new WaitForSeconds(time);
-        canMove = true;
-    }
-
-    void RigidbodyDrag(float x)
-    {
-        rb.drag = x;
-    }
-
-    void WallParticle(float vertical)
+    private void SlideParticle(Vector2 dir)
     {
         var main = slideParticle.main;
 
-        if (wallSlide || (wallGrab && vertical < 0))
+        if (wallSlide)
         {
-            slideParticle.transform.parent.localScale = new Vector3(ParticleSide(), 1, 1);
+            slideParticle.Play();
             main.startColor = Color.white;
         }
         else
