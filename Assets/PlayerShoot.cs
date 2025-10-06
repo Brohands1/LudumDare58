@@ -8,8 +8,9 @@ public class PlayerShoot : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)&&Data.enableSummonSoldier)
+        if (Input.GetMouseButtonDown(0)&&Data.enableSummonSoldier&&Data.currentShadows>1)
         {
+            Data.currentShadows--;
             Shoot();
         }
     }
