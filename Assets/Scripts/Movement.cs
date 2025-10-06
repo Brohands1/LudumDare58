@@ -58,6 +58,7 @@ public class Movement : MonoBehaviour
 
     public int side = 1;
 
+
     void Start()
     {
         coll = GetComponent<Collision>();
@@ -76,6 +77,9 @@ public class Movement : MonoBehaviour
 
         Walk(dir);
         anim.SetHorizontalMovement(x, y, rb.velocity.y);
+
+        // 新增：移动时自动翻转
+        CheckAndFlipSprite(x);
 
         // Wall Grab toggle
         if (coll.onWall && Input.GetButton("Fire3") && canMove)
@@ -376,5 +380,20 @@ public class Movement : MonoBehaviour
     {
         int particleSide = coll.onRightWall ? 1 : -1;
         return particleSide;
+    }
+
+    // 新增方法：根据移动方向自动翻转
+    private void CheckAndFlipSprite(float x)
+    {
+        if (x > 0 && side != 1)
+        {
+            side = 1;
+            anim.Flip(side);
+        }
+        else if (x < 0 && side != -1)
+        {
+            side = -1;
+            anim.Flip(side);
+        }
     }
 }
