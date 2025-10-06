@@ -22,7 +22,7 @@ public class Data
     public static List<ShadowedController> shadows = new List<ShadowedController>();
     public static KeyCode[] keys = { KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6, KeyCode.Alpha7, KeyCode.Alpha8, KeyCode.Alpha9 };
     public static bool[] occupied = new bool[9];
-    public static int maxShadows = 4;
+    public static int maxShadows = 2;
     public static int maxPieces = 4;
     public static int currentShadows = 1;
     public static int currentPieces = 3;
@@ -39,9 +39,9 @@ public class Data
         }
     }
     public static bool
-        enablePlacingBlocks = true,
-        enableSummonController = true,
-        enableSummonSoldier = true;
+        enablePlacingBlocks = false,
+        enableSummonController = false,
+        enableSummonSoldier = false;
     public static void Restart()
     {
         ResetControllers();

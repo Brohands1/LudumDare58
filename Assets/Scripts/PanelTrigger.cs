@@ -16,7 +16,7 @@ public class PanelTrigger : MonoBehaviour
     private void OnTriggerExit2D(Collider2D collision)
     {
         panel.SetActive(false);
-        Destroy(panel);
-        Destroy(gameObject);
+        //Destroy(panel);
+        //Destroy(gameObject);
     }
 }
