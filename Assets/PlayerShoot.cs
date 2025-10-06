@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerShoot : MonoBehaviour
 {
     public GameObject bulletPrefab;   // assign in Inspector
-    public float bulletSpeed = 50f;   // make it faster
+    public float bulletForce = 20f;   // 冲量大小，建议初始为10，可在Inspector调整
     public Transform firePoint;       // optional, for gun tip (assign if you have one)
 
     void Update()
@@ -16,28 +16,23 @@ public class PlayerShoot : MonoBehaviour
 
     void Shoot()
     {
-        // Get mouse position in world space
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-        // Ensure z = 0 (for 2D)
+        // 获取鼠标在世界中的位置，z为摄像机到场景的距离
+        Vector3 mouseScreenPos = Input.mousePosition;
+        mouseScreenPos.z = Mathf.Abs(Camera.main.transform.position.z);
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(mouseScreenPos);
         mousePos.z = 0f;
 
-        // Where the bullet starts (player center or firePoint)
+        // 子弹起点
         Vector3 startPos = firePoint ? firePoint.position : transform.position;
 
-        // Direction from start to cursor
+        // 计算方向
         Vector2 direction = (mousePos - startPos).normalized;
-        startPos = transform.position + (Vector3)(direction * 0.5f);
 
-
-        // Create bullet
+        // 创建子弹
         GameObject bullet = Instantiate(bulletPrefab, startPos, Quaternion.identity);
 
-        // Get rigidbody and apply velocity
+        // 添加冲量
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
-       
-        //rb.velocity = direction * 20f; // 试试20
-        rb.AddForce(direction * 2000f); // 试试500
-        Debug.Log(rb.velocity);
+        rb.AddForce(direction * bulletForce, ForceMode2D.Impulse);
     }
 }
