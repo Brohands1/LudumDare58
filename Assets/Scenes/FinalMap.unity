@@ -24422,12 +24422,12 @@ PrefabInstance:
     - target: {fileID: 1476108620255645346, guid: 8e9ca21a264cf424cb01ffea8da4c29e,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 93.6
+      value: 86.38
       objectReference: {fileID: 0}
     - target: {fileID: 1476108620255645346, guid: 8e9ca21a264cf424cb01ffea8da4c29e,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -42.5
+      value: -32.12
       objectReference: {fileID: 0}
     - target: {fileID: 1476108620255645346, guid: 8e9ca21a264cf424cb01ffea8da4c29e,
         type: 3}
@@ -24634,6 +24634,11 @@ PrefabInstance:
         type: 3}
       propertyPath: jumpForce
       value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 7879853145138507065, guid: 8e9ca21a264cf424cb01ffea8da4c29e,
+        type: 3}
+      propertyPath: movingPlatformLayer.m_Bits
+      value: 256
       objectReference: {fileID: 0}
     - target: {fileID: 8296042337998825785, guid: 8e9ca21a264cf424cb01ffea8da4c29e,
         type: 3}

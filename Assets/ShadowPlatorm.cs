@@ -12,6 +12,7 @@ public class ShadowPlatorm : MonoBehaviour
     void Update()
     {
         currentLifeTime += Time.deltaTime;
-        if(currentLifeTime>lifeTime) Destroy(gameObject);
+        
+        if (currentLifeTime>lifeTime) Destroy(gameObject);
     }
 }

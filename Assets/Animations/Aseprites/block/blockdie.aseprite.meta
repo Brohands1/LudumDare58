@@ -270,11 +270,6 @@ ScriptedImporter:
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    uuid:
-      value0: 820323009
-      value1: 0
-      value2: 0
-      value3: 0
     guid: 820323009
     name: blockdie
     layerFlags: 0
