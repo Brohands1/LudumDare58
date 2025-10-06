@@ -25,6 +25,9 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
+        if (active)
+        {
+            
         transform.rotation= Quaternion.identity;
         if (player != null)
         {
@@ -48,6 +51,7 @@ public class Enemy : MonoBehaviour
         if (hit.collider == null || hit.rigidbody == null)
             mutiplyer = 0;
         rb.velocity = new Vector2(mutiplyer*speed, -6);
+        }
     }
     public void reset()
     {
