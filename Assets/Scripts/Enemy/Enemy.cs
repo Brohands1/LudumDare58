@@ -7,28 +7,38 @@ public class Enemy : MonoBehaviour
 {
     GameObject player;
     public Rigidbody2D rb;
-    public float speed = 1f;
+    public float speed = 2f;
+    public bool active = true;
+    Vector3 Orgin;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         player = GameObject.FindGameObjectWithTag("Player");
+        Orgin=transform.position;
     }
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Player") Data.Restart();
 
+    }
     float mutiplyer = 0;
 
     void Update()
     {
+        transform.rotation= Quaternion.identity;
         if (player != null)
         {
-            if (Vector2.Distance(player.transform.position, transform.position) < 15)
+            if (Vector2.Distance(player.transform.position, transform.position) < 25)
             {
                 if (player.transform.position.x < transform.position.x)
                 {
                     mutiplyer = -1;
+                    transform.localScale=new Vector3(-1,1,1);
                 }
                 else
                 {
                     mutiplyer = 1;
+                    transform.localScale=new Vector3(1,1,1);
                 }
             }
         }
@@ -37,9 +47,12 @@ public class Enemy : MonoBehaviour
 
         if (hit.collider == null || hit.rigidbody == null)
             mutiplyer = 0;
-        rb.velocity = new Vector2(mutiplyer*speed, -1);
+        rb.velocity = new Vector2(mutiplyer*speed, -6);
     }
-
+    public void reset()
+    {
+        transform.position = Orgin ;
+    }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;

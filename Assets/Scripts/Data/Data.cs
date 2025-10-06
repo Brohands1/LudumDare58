@@ -48,7 +48,20 @@ public class Data
         occupied = new bool[9];
         currentShadows = maxShadows;
         UIRefreshNeeded = true;
+        currentAddShadowTimer = 0f;
         GameObject.FindGameObjectWithTag("Player").transform.position = SavePoints.currentSavePoint.transform.position;
+        foreach(var flaot in GameObject.FindGameObjectsWithTag("Float"))
+        {
+            flaot.GetComponent<floatingPlatform>().reset();
+        }
+        foreach(var va in GameObject.FindGameObjectsWithTag("Controller"))
+        {
+            va.GetComponent<Independent>().Active=false;
+        }
+        foreach(var en in GameObject.FindGameObjectsWithTag("Enemy"))
+        {
+            en.GetComponent<Enemy>().reset();
+        }
         //shadows.RemoveAt(1);
     }
     public static void ResetControllers()

@@ -28,4 +28,8 @@ public class floatingPlatform : Dependent
             transform.position= Vector3.MoveTowards(transform.position, endPlace,speed* Time.deltaTime);
         }else transform.position= Vector3.MoveTowards(transform.position, startPlace,speed* Time.deltaTime);
     }
+    public void reset()
+    {
+        transform.position = startPlace;
+    }
 }
