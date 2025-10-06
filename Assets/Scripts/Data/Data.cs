@@ -41,9 +41,18 @@ public class Data
         enableSummonSoldier = true;
     public static void Restart()
     {
-        shadows.Clear();
+        ResetControllers();
         occupied = new bool[9];
         currentShadows = maxShadows;
         //shadows.RemoveAt(1);
+    }
+    public static void ResetControllers()
+    {
+        foreach (var shadow in shadows)
+        {
+            shadow.controller.independent.Shadowed = false;
+            occupied[shadow.num] = false;
+        }
+        shadows.Clear();
     }
 }

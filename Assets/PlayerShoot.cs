@@ -26,13 +26,13 @@ public class PlayerShoot : MonoBehaviour
         Vector3 startPos = firePoint ? firePoint.position : transform.position;
 
         // 计算方向
-        Vector2 direction = (mousePos - startPos).normalized;
+        Vector3 direction = (mousePos - startPos).normalized;
 
         // 创建子弹
         GameObject bullet = Instantiate(bulletPrefab, startPos, Quaternion.identity);
-
+        bullet.GetComponent<BulletDestroyOnCollision>().Init(direction);
         // 添加冲量
-        Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
-        rb.AddForce(direction * bulletForce, ForceMode2D.Impulse);
+        //Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
+        //rb.AddForce(direction * bulletForce, ForceMode2D.Impulse);
     }
 }

@@ -8,7 +8,7 @@ public class ShadowUtil : MonoBehaviour
 {
     [Header("Keys")]
     public KeyCode placeBlockKey = KeyCode.E;
-    public KeyCode removeBlockKey = KeyCode.R;
+    public KeyCode ResetControllerKey = KeyCode.R;
     public static KeyCode summonControllerKey = KeyCode.LeftControl;
     [Header("Others")]
     public Tilemap tilemap;
@@ -77,11 +77,11 @@ public class ShadowUtil : MonoBehaviour
             }
         }
 
-        //if (Input.GetKeyDown(removeBlockKey))
-        //{
-        //    RemoveShadow();
-        //}
-        
+        if (Input.GetKeyDown(ResetControllerKey))
+        {
+            Data.ResetControllers();
+        }
+
     }
     void createBlock()
     {

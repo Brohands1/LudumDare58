@@ -2,15 +2,21 @@ using UnityEngine;
 
 public class BulletDestroyOnCollision : MonoBehaviour
 {
+    private Vector3 dir;
+    public float speed = 20f;
     void OnCollisionEnter2D(Collision2D collision)
     {
-        // Destroy bullet when it hits *anything*
+        if (collision.gameObject.tag == "Enemy") Destroy(collision.gameObject);
+
+        Debug.Log(collision.gameObject.tag+"hitsth");
         Destroy(gameObject);
     }
-
-    // Optional: also destroy on trigger (in case your bullet uses triggers)
-    void OnTriggerEnter2D(Collider2D other)
+    private void Update()
     {
-        Destroy(gameObject);
+        transform.position += dir * Time.deltaTime * speed;
+    }
+    public void Init(Vector3 _in)
+    {
+        dir= _in;
     }
 }
