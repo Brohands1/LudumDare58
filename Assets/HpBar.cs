@@ -4,12 +4,8 @@ using UnityEngine;
 
 public class HpBar : MonoBehaviour
 {
-    public Sprite Full, increasing;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    Vector3 pos;
+
 
     // Update is called once per frame
     void Update()

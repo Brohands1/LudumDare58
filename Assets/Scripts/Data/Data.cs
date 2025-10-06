@@ -5,6 +5,7 @@ using UnityEngine.Tilemaps;
 
 public class Data
 {
+    public static bool UIRefreshNeeded = false;
     public class ShadowedController
     {
         public ShadowedController(ControllerSystem.Controller _cont,int _num)
@@ -21,10 +22,11 @@ public class Data
     public static List<ShadowedController> shadows = new List<ShadowedController>();
     public static KeyCode[] keys = { KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6, KeyCode.Alpha7, KeyCode.Alpha8, KeyCode.Alpha9 };
     public static bool[] occupied = new bool[9];
-    public static int maxShadows = 1;
+    public static int maxShadows = 4;
     public static int maxPieces = 4;
     public static int currentShadows = 1;
     public static int currentPieces = 3;
+    public static float currentAddShadowTimer = 0f;
     public static void AddPiece()
     {
         currentPieces++;
@@ -33,6 +35,7 @@ public class Data
             maxShadows++;
             currentShadows++;
             currentPieces = 0;
+            UIRefreshNeeded = true;
         }
     }
     public static bool
@@ -44,6 +47,7 @@ public class Data
         ResetControllers();
         occupied = new bool[9];
         currentShadows = maxShadows;
+        UIRefreshNeeded = true;
         //shadows.RemoveAt(1);
     }
     public static void ResetControllers()

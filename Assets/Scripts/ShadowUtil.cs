@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using static ControllerSystem;
@@ -15,9 +16,12 @@ public class ShadowUtil : MonoBehaviour
     public TileBase tile;
     public float maxRemoveDistance = 5f;
     public static float addShadowTimer = 4f;
-    public float currentAddShadowTimer = 0f;
     public Transform PlatformPlace;
     public GameObject ShadowPlatform;
+    private void Start()
+    {
+        Data.UIRefreshNeeded = true;
+    }
     void Update()
     {
         //Debug.Log(Data.currentShadows);
@@ -35,13 +39,14 @@ public class ShadowUtil : MonoBehaviour
         }
         if (Data.currentShadows < Data.maxShadows)
         {
-            currentAddShadowTimer += Time.deltaTime;
+            Data.currentAddShadowTimer += Time.deltaTime;
             //Debug.Log(currentAddShadowTimer);
-            if (currentAddShadowTimer >= addShadowTimer)
+            if (Data.currentAddShadowTimer >= addShadowTimer)
             {
                 Data.currentShadows++;
-                currentAddShadowTimer = 0f;
+                Data.currentAddShadowTimer = 0f;
                 Debug.Log($"Regain a shadow, current shadows: {Data.currentShadows}");
+                Data.UIRefreshNeeded = true;
             }
         }
 
@@ -69,6 +74,7 @@ public class ShadowUtil : MonoBehaviour
                                 {
                                     dep.changeTo(shadow.controller.independent.Active);
                                 }
+                                Data.UIRefreshNeeded = true;
                             } 
                         }else Debug.Log("Shadow controller or its components are null, cannot toggle.");
                         break;
@@ -91,5 +97,6 @@ public class ShadowUtil : MonoBehaviour
             Data.currentShadows--;
             Instantiate(ShadowPlatform, PlatformPlace.position, Quaternion.identity);
         }
+        Data.UIRefreshNeeded = true;
     }
 }

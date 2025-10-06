@@ -3,7 +3,7 @@ using UnityEngine;
 public class BulletDestroyOnCollision : MonoBehaviour
 {
     private Vector3 dir;
-    public float speed = 20f;
+    public float speed = 13f;
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Enemy") Destroy(collision.gameObject);
