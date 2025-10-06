@@ -9897,16 +9897,22 @@ MonoBehaviour:
   slideSpeed: 1
   wallJumpLerp: 5
   dashSpeed: 40
+  baseGravity: 3
+  minWallSlideSpeed: 2
   canMove: 1
   wallGrab: 0
   wallJumped: 0
   wallSlide: 0
   isDashing: 0
-  side: 1
+  movingPlatformLayer:
+    serializedVersion: 2
+    m_Bits: 256
   dashParticle: {fileID: 4160113024277352640}
   jumpParticle: {fileID: 1874332469964249515}
   wallJumpParticle: {fileID: 5016519694760363034}
   slideParticle: {fileID: 1408363892629203766}
+  fallLength: 5
+  side: 1
 --- !u!114 &7526846760207642485
 MonoBehaviour:
   m_ObjectHideFlags: 0
