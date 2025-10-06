@@ -6,31 +6,43 @@ public class Shadow1Script : MonoBehaviour
 {
     public GameObject player;
     private ShadowCounter shadowCounter;
-    public int shadowNumber;
+    public GameObject shadow1;
+    public GameObject shadow2;
+    public GameObject shadow3;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        
-        if (player != null)
-        {
-            shadowCounter = player.GetComponent<ShadowCounter>();
-        }
+        shadowCounter = player.GetComponent<ShadowCounter>();
     }
 
     // Update is called once per frame
     void Update()
-    {
-        if (shadowCounter != null)
+    {   
+        if (shadowCounter.shadowCount >= 1)
         {
-            if (shadowCounter.shadowCount >= shadowNumber)
-            {
-                gameObject.SetActive(true);
-            }
-            else
-            {
-                gameObject.SetActive(false);
-            }
+            shadow1.SetActive(true);
+        }
+        else
+        {
+            shadow1.SetActive(false);
+        }
+        if (shadowCounter.shadowCount >= 2)
+        {
+            shadow2.SetActive(true);
+        }
+        else
+        {
+            shadow2.SetActive(false);
+        }
+        if (shadowCounter.shadowCount >= 3)
+        {
+            shadow3.SetActive(true);
+        }
+        else
+        {
+            shadow3.SetActive(false);
         }
     }
 }
