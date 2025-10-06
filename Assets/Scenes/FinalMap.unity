@@ -20333,6 +20333,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 716116409}
     m_Modifications:
+    - target: {fileID: 1680403371744285388, guid: 935608ebf5e8e6b45a57129073b702b8,
+        type: 3}
+      propertyPath: m_BodyType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2097085571633590842, guid: 935608ebf5e8e6b45a57129073b702b8,
+        type: 3}
+      propertyPath: speed
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5276910638922237893, guid: 935608ebf5e8e6b45a57129073b702b8,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -24422,12 +24432,12 @@ PrefabInstance:
     - target: {fileID: 1476108620255645346, guid: 8e9ca21a264cf424cb01ffea8da4c29e,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 93.6
+      value: 27.01
       objectReference: {fileID: 0}
     - target: {fileID: 1476108620255645346, guid: 8e9ca21a264cf424cb01ffea8da4c29e,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -42.5
+      value: -96.26
       objectReference: {fileID: 0}
     - target: {fileID: 1476108620255645346, guid: 8e9ca21a264cf424cb01ffea8da4c29e,
         type: 3}
@@ -24634,6 +24644,11 @@ PrefabInstance:
         type: 3}
       propertyPath: jumpForce
       value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 7879853145138507065, guid: 8e9ca21a264cf424cb01ffea8da4c29e,
+        type: 3}
+      propertyPath: movingPlatformLayer.m_Bits
+      value: 256
       objectReference: {fileID: 0}
     - target: {fileID: 8296042337998825785, guid: 8e9ca21a264cf424cb01ffea8da4c29e,
         type: 3}
