@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class ControllerSystem : MonoBehaviour
@@ -36,10 +37,18 @@ public class ControllerSystem : MonoBehaviour
                         {
                             Data.occupied[i] = true;
                             Data.shadows.Add(new Data.ShadowedController(controller,i));
+                            
                             break;
                         }
                     }
                 }
+            }
+        }
+        foreach (var controller in Data.shadows)
+        {
+            if(controller.controller.independent.Shadowed)
+            {
+                controller.controller.independent.GetComponentInChildren<TextMeshPro>().SetText((controller.num+1).ToString());
             }
         }
     }

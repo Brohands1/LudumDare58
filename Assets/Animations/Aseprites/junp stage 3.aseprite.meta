@@ -205,11 +205,6 @@ ScriptedImporter:
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    uuid:
-      value0: 2419475878
-      value1: 0
-      value2: 0
-      value3: 0
     guid: -1875491418
     name: junp stage 3
     layerFlags: 0
