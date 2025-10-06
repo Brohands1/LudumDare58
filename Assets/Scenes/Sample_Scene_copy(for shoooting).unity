@@ -11823,9 +11823,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 372080441}
   - {fileID: 868355173}
-  - {fileID: 1705534278}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -11846,9 +11844,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 956970984}
-  shadow1: {fileID: 372080440}
+  shadow1: {fileID: 0}
   shadow2: {fileID: 868355172}
-  shadow3: {fileID: 1705534277}
+  shadow3: {fileID: 0}
 --- !u!1 &740520512
 GameObject:
   m_ObjectHideFlags: 0
@@ -12451,7 +12449,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 2711424607331045147, guid: 6631f66c6fcce7f46b4bc637cdc9774f,
     type: 3}
-  bulletSpeed: 10
+  bulletForce: 20
   firePoint: {fileID: 0}
 --- !u!114 &956971016
 MonoBehaviour:
@@ -14250,6 +14248,11 @@ PrefabInstance:
       propertyPath: jumpForce
       value: 14
       objectReference: {fileID: 0}
+    - target: {fileID: 7879853145138507065, guid: 8e9ca21a264cf424cb01ffea8da4c29e,
+        type: 3}
+      propertyPath: wallSlide
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8296042337998825785, guid: 8e9ca21a264cf424cb01ffea8da4c29e,
         type: 3}
       propertyPath: m_Layer
@@ -14682,3 +14685,4 @@ SceneRoots:
   - {fileID: 548052359}
   - {fileID: 1430453954}
   - {fileID: 1231709874}
+  - {fileID: 707732492}
