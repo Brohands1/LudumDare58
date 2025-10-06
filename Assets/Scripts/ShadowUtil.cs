@@ -53,6 +53,7 @@ public class ShadowUtil : MonoBehaviour
             {
                 foreach (var shadow in Data.shadows)
                 {
+                    Debug.Log(pressedKey+" "+shadow.key);
                     if (shadow == null) continue;
                     if (shadow.key == pressedKey)
                     {
@@ -63,12 +64,13 @@ public class ShadowUtil : MonoBehaviour
                             {
                                 Data.currentShadows--;
                                 shadow.controller.independent.Active = !shadow.controller.independent.Active;
+                                Debug.Log($"Toggled shadow with key {pressedKey} to {shadow.controller.independent.Active}");
                                 foreach (var dep in shadow.controller.dependent)
                                 {
                                     dep.changeTo(shadow.controller.independent.Active);
                                 }
                             } 
-                        }
+                        }else Debug.Log("Shadow controller or its components are null, cannot toggle.");
                         break;
                     }
                 }

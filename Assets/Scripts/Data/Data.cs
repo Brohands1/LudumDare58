@@ -9,7 +9,8 @@ public class Data
     {
         public ShadowedController(ControllerSystem.Controller _cont,int _num)
         { 
-            key = keys[num];
+            Debug.Log($"Create shadow with key {keys[_num]}");
+            key = keys[_num];
             controller = _cont;
             num = _num;
         }
