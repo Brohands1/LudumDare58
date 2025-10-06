@@ -8,7 +8,7 @@ public class PlayerShoot : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0)&&Data.enableSummonSoldier)
         {
             Shoot();
         }

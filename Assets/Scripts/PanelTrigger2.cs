@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PanelTrigger : MonoBehaviour
+public class PanelTrigger2 : MonoBehaviour
 {
     public GameObject panel;
+    public GameObject Aim;
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        Data.enablePlacingBlocks = true;
+        Data.enableSummonSoldier = true;
+        
         panel.SetActive(true);
     }
 
