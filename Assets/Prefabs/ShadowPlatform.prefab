@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7148036724670070923}
   - component: {fileID: 1680403371744285388}
   - component: {fileID: 5802128475038839768}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ShadowPlatform
   m_TagString: Untagged
   m_Icon: {fileID: 0}

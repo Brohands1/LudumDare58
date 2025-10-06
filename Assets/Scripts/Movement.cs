@@ -11,15 +11,14 @@ public class Movement : MonoBehaviour
     public Rigidbody2D rb;
     private AnimationScript anim;
 
-    [Space]
     [Header("Stats")]
     public float speed = 10;
     public float jumpForce = 50;
     public float slideSpeed = 5;
     public float wallJumpLerp = 10;
     public float dashSpeed = 20;
+    public float minWallSlideSpeed = 2f;
 
-    [Space]
     [Header("Booleans")]
     public bool canMove;
     public bool wallGrab;
@@ -27,19 +26,19 @@ public class Movement : MonoBehaviour
     public bool wallSlide;
     public bool isDashing;
 
-    [Space]
-
     private bool groundTouch;
     private bool hasDashed;
 
     public int side = 1;
 
-    [Space]
     [Header("Polish")]
     public ParticleSystem dashParticle;
     public ParticleSystem jumpParticle;
     public ParticleSystem wallJumpParticle;
     public ParticleSystem slideParticle;
+
+    [Header("Gravity")]
+    public float baseGravity = 3f;
 
     // Start is called before the first frame update
     void Start()
@@ -63,11 +62,14 @@ public class Movement : MonoBehaviour
 
         if (coll.onWall && Input.GetButton("Fire3") && canMove)
         {
-            if(side != coll.wallSide)
-                anim.Flip(side*-1);
+            if (side != coll.wallSide)
+                anim.Flip(side * -1);
+
             wallGrab = true;
-            wallSlide = false;
+            // Hold grab + stick neutral/down => slide; stick up => climb
+            wallSlide = (y <= 0f);
         }
+
 
         if (Input.GetButtonUp("Fire3") || !coll.onWall || !canMove)
         {
@@ -80,28 +82,39 @@ public class Movement : MonoBehaviour
             wallJumped = false;
             GetComponent<BetterJumping>().enabled = true;
         }
-        
+
         if (wallGrab && !isDashing)
         {
-            rb.gravityScale = 0;
-            if(x > .2f || x < -.2f)
-            rb.velocity = new Vector2(rb.velocity.x, 0);
+            if (y > 0.05f)
+            {
+                // climb (up while grabbing)
+                rb.gravityScale = 0;
+                if (x > .2f || x < -.2f)
+                    rb.velocity = new Vector2(rb.velocity.x, 0);
 
-            float speedModifier = y > 0 ? .5f : 1;
-
-            rb.velocity = new Vector2(rb.velocity.x, y * (speed * speedModifier));
+                float speedModifier = 0.5f; // reduced climb speed
+                rb.velocity = new Vector2(rb.velocity.x, y * (speed * speedModifier));
+            }
+            else
+            {
+                // slide (neutral or holding down while grabbing)
+                rb.gravityScale = 3;
+                WallSlide();
+            }
         }
         else
         {
             rb.gravityScale = 3;
         }
 
-        if(coll.onWall && !coll.onGround)
+        if (!wallGrab)
+            rb.gravityScale = baseGravity;
+
+        if (coll.onWall && !coll.onGround)
         {
-            if (x != 0 && !wallGrab)
+            if (wallGrab && y <= 0f)
             {
                 wallSlide = true;
-                WallSlide();
             }
         }
 
@@ -242,7 +255,11 @@ public class Movement : MonoBehaviour
         }
         float push = pushingWall ? 0 : rb.velocity.x;
 
-        rb.velocity = new Vector2(push, -slideSpeed);
+        // Never go slower than -minSlide, but allow gravity to go faster
+        float minSlide = Mathf.Max(minWallSlideSpeed, slideSpeed);
+        float yVel = Mathf.Min(rb.velocity.y, -minSlide);
+
+        rb.velocity = new Vector2(push, yVel);
     }
 
     private void Walk(Vector2 dir)
