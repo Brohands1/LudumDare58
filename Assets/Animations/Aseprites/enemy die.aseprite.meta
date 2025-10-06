@@ -310,11 +310,6 @@ ScriptedImporter:
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    uuid:
-      value0: 4284534312
-      value1: 0
-      value2: 0
-      value3: 0
     guid: -10432984
     name: enemy die
     layerFlags: 0
